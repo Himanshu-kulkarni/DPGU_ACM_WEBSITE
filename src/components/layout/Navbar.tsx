@@ -86,7 +86,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link href="/contact" className="hidden sm:inline-flex">
             <Button size="sm" variant="primary" rightIcon={<ArrowUpRight className="w-3.5 h-3.5" />}>
-              Join Chapter
+              Join Us
             </Button>
           </Link>
 
@@ -150,7 +150,7 @@ export const Navbar: React.FC = () => {
               className="w-full block"
             >
               <Button size="lg" variant="primary" className="w-full justify-center">
-                Join Chapter
+                Join Us
               </Button>
             </Link>
             <p className="text-center text-xs text-[#A5AEC0] mt-4 font-mono">

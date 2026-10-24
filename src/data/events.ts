@@ -286,12 +286,21 @@ export function getAllEvents(): ChapterEventDetail[] {
   return CHAPTER_EVENTS;
 }
 
+export function isEventUpcoming(event: { startTime: string; endTime?: string; status: string }): boolean {
+  if (event.status === "COMPLETED" || event.status === "PAST" || event.status === "CANCELLED" || event.status === "ARCHIVED") {
+    return false;
+  }
+  const now = new Date();
+  const endDateTime = event.endTime ? new Date(event.endTime) : new Date(event.startTime);
+  return endDateTime.getTime() >= now.getTime();
+}
+
 export function getUpcomingEvents(): ChapterEventDetail[] {
-  return CHAPTER_EVENTS.filter((e) => e.status === "UPCOMING");
+  return CHAPTER_EVENTS.filter((e) => isEventUpcoming(e));
 }
 
 export function getPastEvents(): ChapterEventDetail[] {
-  return CHAPTER_EVENTS.filter((e) => e.status === "PAST");
+  return CHAPTER_EVENTS.filter((e) => !isEventUpcoming(e));
 }
 
 export function getFeaturedEvent(): ChapterEventDetail | undefined {

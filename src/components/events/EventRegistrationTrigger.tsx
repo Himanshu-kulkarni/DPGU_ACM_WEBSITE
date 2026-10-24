@@ -33,8 +33,10 @@ export function EventRegistrationTrigger({ event }: EventRegistrationTriggerProp
   const spotsRemaining = Math.max(0, event.capacity - event.registeredCount);
   const isSoldOut = spotsRemaining === 0;
   const isDeadlinePassed = new Date() > new Date(event.registrationDeadline);
+  const endDateTime = event.endTime ? new Date(event.endTime) : new Date(event.startTime);
+  const isPastEvent = new Date().getTime() > endDateTime.getTime() || event.status === "COMPLETED" || event.status === "PAST";
   const isPublished = event.status === "PUBLISHED" || event.status === "UPCOMING";
-  const canRegister = isPublished && !isSoldOut && !isDeadlinePassed;
+  const canRegister = isPublished && !isPastEvent && !isSoldOut && !isDeadlinePassed;
 
   const startDate = new Date(event.startTime).toLocaleDateString("en-US", {
     weekday: "long",

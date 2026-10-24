@@ -7,9 +7,10 @@ This document serves as the comprehensive single source of truth for the project
 ## 1. Project Overview & Vision
 
 - **Entity**: DPG University ACM Student Chapter (Sector 34, Gurugram, Haryana, India).
-- **Mission**: Build an authoritative, high-performance, dark-mode digital presence showcasing chapter events, student projects, achievements, and leadership, with frictionless public event registration (zero account required for attendees) and a dedicated single-admin console.
-- **Current Status**: **Phase 2 Completed** (Complete Public-Facing Portal, Event Filter Engine, Showcases, Legal Pages).
-- **Next Phase**: **Phase 3** (Event Engine, Guest Registration Drawer, & Digital QR Ticket Issuance).
+- **Mission**: Build an authoritative, high-performance, dark-mode digital presence showcasing chapter leadership and events, with frictionless public event registration (zero account required for attendees) and a dedicated single-admin console.
+- **Current Status**: **Phase 4 Completed + Homepage & Navigation Revision Completed** (Public Event Registration, Payment Workflows, QR Boarding Pass Engine, Admin Dashboard, Revised Homepage Structure & Navigation).
+- **Public Navigation**: Home (`/`), About (`/about`), Events (`/events`), Team (`/team`), Gallery (`/gallery`), Contact (`/contact`), Join Us (`/contact`).
+- **Removed Public Sections & Obsolete Routes**: Charter & Standards, Technical Domains & Specializations (`/domains`), Projects & Honors (`/projects`), and Achievements (`/achievements`) have been removed from the public navigation and sitemap, returning standard 404 responses via custom `not-found.tsx`.
 
 ---
 
@@ -23,7 +24,7 @@ This document serves as the comprehensive single source of truth for the project
 | **Styling** | Tailwind CSS | `^4` | Utility-first CSS using CSS variables and theme tokens |
 | **Icons** | Lucide React | `^1.58.0` | Accessible SVG icon suite |
 | **Validation** | Zod | `^3.24.2` | Runtime schema validation for forms and environment variables |
-| **Database** | PostgreSQL / Supabase | `^2.49.1` | Managed cloud relational database with Row Level Security (RLS) |
+| **Database** | PostgreSQL / Supabase / JSON Store | `^2.49.1` | Relational database with atomic reservations and audit logs |
 | **Class Merging**| `clsx` + `tailwind-merge` | Latest | Deterministic Tailwind utility class composition (`cn()`) |
 
 ---
@@ -42,9 +43,9 @@ All components strictly honor the following palette and styling constraints:
 --color-accent-hover:     #5078EE;  /* Active / hover state for buttons */
 --color-border-subtle:    #252D3D;  /* 1px card borders and dividers */
 --color-border-focus:     #648CFF;  /* Accessible focus outline */
---color-status-success:   #10B981;  /* Valid scan, confirmed ticket */
---color-status-warning:   #F59E0B;  /* Limited spots, duplicate scan */
---color-status-error:     #EF4444;  /* Form validation error, counterfeit ticket */
+--color-status-success:   #10B981;  /* Valid scan, confirmed ticket, registration open */
+--color-status-warning:   #F59E0B;  /* Limited spots, registration closed */
+--color-status-error:     #EF4444;  /* Capacity reached, validation error */
 ```
 
 ### Accessibility & Motion Rules:
@@ -54,51 +55,56 @@ All components strictly honor the following palette and styling constraints:
 
 ---
 
-## 4. Component Inventory (`src/components/`)
+## 4. Homepage Structural Order (Revision)
 
-### UI Primitives (`src/components/ui/`)
-1. **`Button.tsx`**:
-   - Variants: `primary`, `secondary`, `text`, `outline`, `destructive`.
-   - Sizes: `sm`, `md`, `lg`.
-   - Supports `isLoading` with accessible spinner, `leftIcon`, `rightIcon`, and disabled states.
-2. **`Card.tsx`**:
-   - Variants: `surface` (`#101522`), `elevated` (`#171E2D`), `outline`.
-   - Subcomponents: `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`.
-   - Supports `isInteractive` prop with subtle border transition.
-3. **`Input.tsx`**:
-   - Complete form field with label, helper text, left/right icons, and accessible validation error alert.
-4. **`Textarea.tsx`**:
-   - Multi-line input with error state association.
-5. **`Select.tsx`**:
-   - Styled native select with accessible chevron icon and validation error presentation.
-6. **`Badge.tsx`**:
-   - Status indicators: `neutral`, `accent`, `success`, `warning`, `error`.
-   - Supports optional dot indicator (`showDot`).
-7. **`Spinner.tsx`**:
-   - Accessible loading indicator with `role="status"` and visually hidden label text.
-8. **`EmptyState.tsx`**:
-   - Clean dashed container for zero-data states with icon, title, description, and action button.
-9. **`ErrorState.tsx`**:
-   - Accessible error banner (`role="alert"`) with retry callback trigger.
-10. **`Modal.tsx`**:
-    - Accessible dialog (`role="dialog"`, `aria-modal="true"`) with backdrop blur, body scroll lock, and ESC key listener.
-11. **`Toast.tsx`**:
-    - Status notification banner (`success`, `error`, `warning`, `info`) with dismiss button.
-
-### Shared Layout (`src/components/layout/`)
-1. **`Navbar.tsx`**:
-   - Sticky top glassmorphic navigation bar (`#080B12`/85 with `backdrop-blur-md`).
-   - Active route detection using `usePathname()`.
-   - Fully responsive mobile drawer with accessible hamburger toggle button (`aria-expanded`).
-2. **`Footer.tsx`**:
-   - Multi-column footer covering chapter identity, navigation links, ACM resources, campus location, and admin link.
+1. **Navigation Bar**: Responsive glassmorphic navigation with links to Home, About, Events, Team, Gallery, Contact, and "Join Us" primary CTA button.
+2. **Hero Section**: Chapter introduction with "Build. Innovate. Compete." headline, introductory copy, action buttons, and adjusted metrics (Attendees, Workshops, Pillars, Open Access).
+3. **Meet Our Team Section**:
+   - Replaces former Upcoming Events widget on homepage.
+   - Showcases Faculty Sponsor (`Dr. Rajesh Sharma`), Chapter Chair (`Aryan Verma`), Vice Chair (`Ananya Sharma`), and key officers (`Rohit Kumar`, `Neha Patel`, `Sneha Rao`, etc.).
+   - Full names, official roles/designations, short bios, and LinkedIn/GitHub links.
+   - Clear visual distinction between institutional leadership and functional leads.
+   - "View Full Team" CTA linking to `/team`.
+4. **Events Hub Exploration Card**:
+   - Prominent feature card introducing chapter hackathons, masterclasses, and talks with quick capability highlights.
+   - Direct CTA links to explore upcoming and past events on `/events`.
+   - **No standalone upcoming-events widget or event-card section is displayed on the homepage.**
+5. **About DPGU ACM Section**:
+   - Chapter mission, ACM affiliation, and the Four Pillars (Learn, Build, Network, Lead).
+6. **Chapter Highlights & Milestones**:
+   - Verified institutional highlights: ACM Global Affiliation, Student-Led Engineering, and National Competition Engagement (SIH, ICPC).
+7. **Contact / Join Us Call to Action**:
+   - Application prompt with CTAs for chapter membership and reaching out to the secretariat.
+8. **Footer**:
+   - Clean chapter identity, navigation links (About, Events, Team, Gallery, Contact), ACM resources, location details, legal links, and admin portal.
 
 ---
 
-## 5. Architectural Guardrails & Rules
+## 5. Events Section & Dynamic Classification Rules
+
+The public `/events` catalog clearly separates events into two categories using a segmented control:
+
+### 5.1 Dynamic Date Classification
+- **Upcoming Events**: Published events where `now <= new Date(event.endTime || event.startTime)` and status is not `COMPLETED` or `PAST`. For events spanning multiple days, they remain classified as upcoming until their end date has passed.
+- **Past Events**: Events that have already taken place (`now > new Date(event.endTime || event.startTime)` or status is `COMPLETED`/`PAST`).
+
+### 5.2 Registration Status vs Event Timing
+- **Upcoming Events**:
+  - Displays title, poster banner, date range, venue, category, and fee indicator (Free vs Paid).
+  - Displays registration availability badge:
+    - *Registration Open*: registration action enabled with spots remaining indicator.
+    - *Registration Closed*: deadline has passed; registration action disabled.
+    - *Capacity Reached / Sold Out*: all seats reserved; registration action disabled.
+- **Past Events**:
+  - Displays event title, poster banner, date, venue, category badge, and completion status.
+  - Provides "View Event Details & Recap" link.
+  - **Does not display a registration button for completed events.**
+
+---
+
+## 6. Architectural Guardrails & Rules
 
 1. **Guest Registration Principle**: Public attendees register for events without creating user accounts. Registration identity is tied to `(event_id, LOWER(email))`.
-2. **No Public Admin Signups**: The admin portal (`/admin/login`) is strictly for the authorized single administrator. Public registration or signup endpoints are prohibited.
-3. **No Fake Data**: Production pages must not display fabricated member names, fake phone numbers, or unverified event statistics.
-4. **No Payment Processing in Phase 1**: Payment gateway integration is strictly deferred to Phase 4.
-5. **Hostinger Compatibility**: PostgreSQL is hosted via Supabase, ensuring full compatibility regardless of whether Hostinger provides a shared web hosting plan or a KVM VPS.
+2. **No Public Admin Signups**: The admin portal (`/admin/login`) is strictly for authorized administrators.
+3. **No Fabricated Data**: Production pages must not display fabricated member names, fake phone numbers, or unverified event statistics.
+4. **Hostinger Compatibility**: Lightweight JSON/PostgreSQL store compatibility ensuring frictionless deployment.

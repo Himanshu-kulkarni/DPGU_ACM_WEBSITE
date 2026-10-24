@@ -125,7 +125,7 @@ export default function AboutPage() {
               <span className="text-xs font-mono text-[#A5AEC0]">{faculty.tenureYear}</span>
             </div>
             <h3 className="text-xl font-bold text-[#F5F7FB]">
-              {faculty.namePlaceholder}
+              {faculty.name}
             </h3>
             <p className="text-xs text-[#648CFF] font-medium font-mono">
               {faculty.department}

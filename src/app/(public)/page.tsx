@@ -7,38 +7,50 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { getUpcomingEvents, getFeaturedEvent } from "@/data/events";
-import { getAllDomains } from "@/data/domains";
-import { getAllAchievements } from "@/data/projects";
 import { getFacultyCoordinator, getAllOfficers } from "@/data/team";
 import {
-  Calendar,
-  MapPin,
   ArrowRight,
-  Trophy,
   Users,
   Code2,
   ShieldCheck,
   Layers,
   GraduationCap,
+  Sparkles,
+  History,
+  Award,
+  Globe2,
+  Terminal,
 } from "lucide-react";
+import { LinkedInIcon, GitHubIcon } from "@/components/ui/SocialIcons";
 
 export const metadata: Metadata = {
   title: "DPGU ACM Student Chapter | Build. Innovate. Compete.",
   description:
-    "Official website of DPG University ACM Student Chapter. Advancing computing through flagship hackathons, technical workshops, open-source projects, and student leadership.",
+    "Official website of DPG University ACM Student Chapter. Advancing computing through flagship hackathons, technical workshops, open-source engineering, and student leadership.",
 };
 
+function getInitials(name: string): string {
+  const parts = name.replace(/^Dr\.\s*/i, "").trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
+}
+
 export default function HomePage() {
-  const upcomingEvents = getUpcomingEvents().slice(0, 3);
-  const featuredEvent = getFeaturedEvent();
-  const domains = getAllDomains();
-  const achievements = getAllAchievements().slice(0, 3);
   const faculty = getFacultyCoordinator();
-  const officers = getAllOfficers().slice(1, 4); // First 3 student officers
+  const allOfficers = getAllOfficers();
+  const executiveOfficers = allOfficers.filter((o) => o.category === "EXECUTIVE");
+  const leadOfficers = allOfficers.filter((o) => o.category === "LEAD");
+
+  // Selected leadership and team members to showcase on homepage
+  const studentLeadership = executiveOfficers.slice(0, 2); // Chair and Vice Chair
+  const teamMembersPreview = [
+    ...executiveOfficers.slice(2, 4), // General Secretary and Treasurer
+    ...leadOfficers.slice(0, 2),      // Technical Lead and AI/Research Lead
+  ];
 
   return (
     <div className="space-y-20 sm:space-y-28 py-4">
@@ -72,29 +84,29 @@ export default function HomePage() {
                 size="lg"
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
-                Explore Upcoming Events
+                Explore Chapter Events
               </Button>
             </Link>
-            <Link href="/about">
+            <Link href="/team">
               <Button variant="secondary" size="lg">
-                About the Chapter
+                Meet Our Leadership
               </Button>
             </Link>
           </div>
 
-          {/* Quick Metrics Bar */}
+          {/* Quick Metrics Bar (Adjusted to avoid removed sections) */}
           <div className="pt-6 border-t border-[#252D3D] grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
               <div className="text-2xl font-bold font-mono text-[#F5F7FB]">600+</div>
               <div className="text-xs text-[#A5AEC0] mt-0.5">Event Attendees</div>
             </div>
             <div>
-              <div className="text-2xl font-bold font-mono text-[#648CFF]">6</div>
-              <div className="text-xs text-[#A5AEC0] mt-0.5">Technical Domains</div>
+              <div className="text-2xl font-bold font-mono text-[#648CFF]">15+</div>
+              <div className="text-xs text-[#A5AEC0] mt-0.5">Workshops & Talks</div>
             </div>
             <div>
-              <div className="text-2xl font-bold font-mono text-[#F5F7FB]">12+</div>
-              <div className="text-xs text-[#A5AEC0] mt-0.5">Student Projects</div>
+              <div className="text-2xl font-bold font-mono text-[#F5F7FB]">4</div>
+              <div className="text-xs text-[#A5AEC0] mt-0.5">Core Chapter Pillars</div>
             </div>
             <div>
               <div className="text-2xl font-bold font-mono text-[#10B981]">100%</div>
@@ -103,146 +115,323 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Ambient Subtle Radial Gradient (Non-Distracting) */}
+        {/* Ambient Subtle Radial Gradient */}
         <div
           className="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-[#648CFF]/8 blur-3xl pointer-events-none"
           aria-hidden="true"
         />
       </section>
 
-      {/* 2. UPCOMING EVENTS */}
-      <section className="space-y-8" aria-labelledby="events-heading">
+      {/* 2. MEET OUR TEAM SECTION */}
+      <section className="space-y-8" aria-labelledby="team-heading">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252D3D] pb-5">
           <div>
             <Badge variant="accent" size="sm" className="mb-2">
-              Calendar & Registrations
+              Leadership & Governance
             </Badge>
-            <h2 id="events-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
-              Upcoming Events & Workshops
+            <h2 id="team-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
+              Meet Our Team
             </h2>
             <p className="text-sm text-[#A5AEC0] mt-1">
-              Register with zero account creation required. Instant digital pass issuance.
+              The student officers and faculty advisors guiding the DPGU ACM Student Chapter.
             </p>
           </div>
-          <Link href="/events">
+          <Link href="/team">
             <Button variant="secondary" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              View All Events
+              View Full Team
             </Button>
           </Link>
         </div>
 
-        {/* Featured Spotlight Card */}
-        {featuredEvent && (
-          <Card variant="elevated" className="border-[#648CFF]/40 relative overflow-hidden">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div className="space-y-3 max-w-2xl">
-                <div className="flex items-center gap-2">
-                  <Badge variant="accent" size="sm" showDot>
-                    Featured Flagship
-                  </Badge>
-                  <Badge variant="neutral" size="sm">
-                    {featuredEvent.category}
-                  </Badge>
-                  <span className="text-xs font-mono text-[#10B981] font-semibold">
-                    {featuredEvent.eventType === "FREE" ? "Free Admission" : `₹${featuredEvent.priceInr}`}
-                  </span>
+        {/* Leadership Distinction: Faculty Sponsor & Executive Leaders */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Faculty Sponsor Card */}
+          <Card variant="elevated" className="border-[#648CFF]/30 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#171E2D] to-[#101522] border-2 border-[#648CFF]/40 flex items-center justify-center text-[#648CFF] font-bold text-lg font-mono shrink-0 shadow-md">
+                  {faculty.photoUrl ? (
+                    <img
+                      src={faculty.photoUrl}
+                      alt={faculty.name}
+                      className="w-full h-full object-cover rounded-2xl"
+                    />
+                  ) : (
+                    <GraduationCap className="w-7 h-7 text-[#648CFF]" />
+                  )}
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-bold text-[#F5F7FB]">
-                  {featuredEvent.title}
+                <div className="flex items-center gap-1.5">
+                  {faculty.linkedinUrl && (
+                    <a
+                      href={faculty.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                      aria-label={`${faculty.name} LinkedIn`}
+                    >
+                      <LinkedInIcon className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {faculty.githubUrl && (
+                    <a
+                      href={faculty.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                      aria-label={`${faculty.name} GitHub`}
+                    >
+                      <GitHubIcon className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <Badge variant="accent" size="sm" className="mb-2">
+                  Faculty Sponsor
+                </Badge>
+                <h3 className="text-lg font-bold text-[#F5F7FB]">
+                  {faculty.name}
                 </h3>
-                <p className="text-sm text-[#A5AEC0] leading-relaxed">
-                  {featuredEvent.subtitle}
+                <p className="text-xs text-[#648CFF] font-mono mt-0.5">
+                  {faculty.department}
                 </p>
-
-                <div className="flex flex-wrap items-center gap-4 text-xs text-[#A5AEC0] pt-1">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-[#648CFF]" />
-                    <span>Nov 14–15, 2026</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-[#648CFF]" />
-                    <span>{featuredEvent.venue}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Users className="w-4 h-4 text-[#A5AEC0]" />
-                    <span>{featuredEvent.capacity - featuredEvent.registeredCount} spots remaining</span>
-                  </div>
-                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
-                <Link href={`/events/${featuredEvent.slug}`}>
-                  <Button variant="primary" size="md" className="w-full justify-center">
-                    Register Now
-                  </Button>
-                </Link>
-                <Link href={`/events/${featuredEvent.slug}`}>
-                  <Button variant="secondary" size="md" className="w-full justify-center">
-                    Event Details & Schedule
-                  </Button>
-                </Link>
-              </div>
+              <p className="text-xs text-[#A5AEC0] leading-relaxed line-clamp-3">
+                {faculty.bio}
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-[#252D3D]/60 mt-4 flex items-center justify-between text-xs text-[#A5AEC0]">
+              <span className="font-mono text-[11px]">Academic Advisory</span>
+              <span className="text-[#648CFF] font-mono text-[11px]">{faculty.tenureYear}</span>
             </div>
           </Card>
-        )}
 
-        {/* Regular Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {upcomingEvents.map((evt) => (
-            <Card key={evt.id} variant="surface" isInteractive className="flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <Badge variant="neutral" size="sm">
-                    {evt.category}
+          {/* Chapter Chair & Vice Chair */}
+          {studentLeadership.map((leader) => (
+            <Card key={leader.id} variant="elevated" className="border-[#252D3D] flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#171E2D] to-[#101522] border border-[#252D3D] flex items-center justify-center text-[#648CFF] font-bold text-lg font-mono shrink-0 shadow-md">
+                    {leader.photoUrl ? (
+                      <img
+                        src={leader.photoUrl}
+                        alt={leader.name}
+                        className="w-full h-full object-cover rounded-2xl"
+                      />
+                    ) : (
+                      getInitials(leader.name)
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    {leader.linkedinUrl && (
+                      <a
+                        href={leader.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                        aria-label={`${leader.name} LinkedIn`}
+                      >
+                        <LinkedInIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {leader.githubUrl && (
+                      <a
+                        href={leader.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                        aria-label={`${leader.name} GitHub`}
+                      >
+                        <GitHubIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <Badge variant="accent" size="sm" className="mb-2">
+                    {leader.roleTitle}
                   </Badge>
-                  <span className="text-xs font-mono font-semibold text-[#648CFF]">
-                    {evt.eventType === "FREE" ? "FREE" : `₹${evt.priceInr}`}
-                  </span>
+                  <h3 className="text-lg font-bold text-[#F5F7FB]">
+                    {leader.name}
+                  </h3>
+                  <p className="text-xs text-[#648CFF] font-mono mt-0.5">
+                    {leader.department}
+                  </p>
                 </div>
 
-                <CardTitle className="text-lg mb-2">
-                  <Link href={`/events/${evt.slug}`} className="hover:text-[#648CFF] transition-colors">
-                    {evt.title}
-                  </Link>
-                </CardTitle>
-
-                <CardDescription className="line-clamp-2 mb-4">
-                  {evt.subtitle}
-                </CardDescription>
-
-                <div className="space-y-1.5 text-xs text-[#A5AEC0]">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#648CFF]" />
-                    <span>{new Date(evt.startTime).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#648CFF]" />
-                    <span className="truncate">{evt.venue}</span>
-                  </div>
-                </div>
+                <p className="text-xs text-[#A5AEC0] leading-relaxed line-clamp-3">
+                  {leader.bio}
+                </p>
               </div>
 
-              <CardFooter className="px-0 pb-0 pt-4 border-t border-[#252D3D]/60 flex items-center justify-between">
-                <span className="text-xs text-[#A5AEC0]">
-                  {evt.capacity - evt.registeredCount} seats left
-                </span>
-                <Link href={`/events/${evt.slug}`}>
-                  <Button variant="text" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                    View Event
-                  </Button>
-                </Link>
-              </CardFooter>
+              <div className="pt-3 border-t border-[#252D3D]/60 mt-4 flex items-center justify-between text-xs text-[#A5AEC0]">
+                <span className="font-mono text-[11px]">Executive Leadership</span>
+                <span className="text-[#648CFF] font-mono text-[11px]">{leader.tenureYear}</span>
+              </div>
             </Card>
           ))}
         </div>
+
+        {/* Other Team Members Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {teamMembersPreview.map((member) => (
+            <Card key={member.id} variant="surface" className="flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="w-10 h-10 rounded-xl bg-[#171E2D] border border-[#252D3D] flex items-center justify-center text-[#648CFF] font-mono font-bold text-xs shrink-0">
+                    {member.photoUrl ? (
+                      <img
+                        src={member.photoUrl}
+                        alt={member.name}
+                        className="w-full h-full object-cover rounded-xl"
+                      />
+                    ) : (
+                      getInitials(member.name)
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    {member.linkedinUrl && (
+                      <a
+                        href={member.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded-md text-[#A5AEC0] hover:text-[#648CFF] transition-colors"
+                        aria-label={`${member.name} LinkedIn`}
+                      >
+                        <LinkedInIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {member.githubUrl && (
+                      <a
+                        href={member.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded-md text-[#A5AEC0] hover:text-[#648CFF] transition-colors"
+                        aria-label={`${member.name} GitHub`}
+                      >
+                        <GitHubIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <Badge variant="neutral" size="sm">
+                  {member.roleTitle}
+                </Badge>
+
+                <div>
+                  <h4 className="text-sm font-bold text-[#F5F7FB]">
+                    {member.name}
+                  </h4>
+                  <div className="text-[11px] text-[#648CFF] font-mono">
+                    {member.department}
+                  </div>
+                </div>
+
+                <p className="text-xs text-[#A5AEC0] leading-relaxed line-clamp-2">
+                  {member.bio}
+                </p>
+              </div>
+
+              <div className="pt-3 border-t border-[#252D3D]/60 mt-3 text-[11px] text-[#A5AEC0] font-mono">
+                {member.tenureYear}
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <div className="flex justify-center pt-2">
+          <Link href="/team">
+            <Button variant="outline" size="md" rightIcon={<ArrowRight className="w-4 h-4" />}>
+              View Full Committee & Directorate Roster
+            </Button>
+          </Link>
+        </div>
       </section>
 
-      {/* 3. ABOUT THE CHAPTER */}
+      {/* 3. EVENTS EXPLORATION SECTION (No standalone widget / event cards) */}
+      <section className="relative overflow-hidden rounded-3xl border border-[#252D3D] bg-gradient-to-br from-[#101522] via-[#080B12] to-[#101522] p-8 sm:p-12 shadow-xl" aria-labelledby="events-hub-heading">
+        <div className="max-w-3xl space-y-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="accent" size="sm" showDot>
+              Chapter Events & Programs
+            </Badge>
+            <Badge variant="neutral" size="sm">
+              Continuous Technical Calendar
+            </Badge>
+          </div>
+
+          <div className="space-y-2">
+            <h2 id="events-hub-heading" className="text-2xl sm:text-3xl font-extrabold text-[#F5F7FB]">
+              Flagship Hackathons, Workshops & Technical Talks
+            </h2>
+            <p className="text-sm sm:text-base text-[#A5AEC0] leading-relaxed">
+              From 36-hour competitive hackathons to intensive systems engineering masterclasses,
+              our events connect passionate student developers with industry mentors. Public registration
+              is completely frictionless with instant digital QR boarding passes.
+            </p>
+          </div>
+
+          {/* Quick Features Highlight */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div className="p-3 rounded-xl border border-[#252D3D] bg-[#080B12]/80 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#648CFF]">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Zero Account Signup</span>
+              </div>
+              <p className="text-[11px] text-[#A5AEC0]">
+                Register with email and name; passes generated instantly.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl border border-[#252D3D] bg-[#080B12]/80 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#10B981]">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Digital QR Passes</span>
+              </div>
+              <p className="text-[11px] text-[#A5AEC0]">
+                Cryptographic ticket verification and instant check-in.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl border border-[#252D3D] bg-[#080B12]/80 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#F59E0B]">
+                <Award className="w-3.5 h-3.5" />
+                <span>Verified Certificates</span>
+              </div>
+              <p className="text-[11px] text-[#A5AEC0]">
+                ACM-accredited digital participation certificates for attendees.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 pt-3">
+            <Link href="/events">
+              <Button variant="primary" size="lg" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                Explore Upcoming Events
+              </Button>
+            </Link>
+            <Link href="/events">
+              <Button variant="secondary" size="lg" leftIcon={<History className="w-4 h-4" />}>
+                Browse Past Events & Archives
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. ABOUT DPGU ACM SECTION */}
       <section className="space-y-8" aria-labelledby="about-heading">
         <div className="border-b border-[#252D3D] pb-5">
           <Badge variant="accent" size="sm" className="mb-2">
-            Charter & Standards
+            Chapter Mission & Values
           </Badge>
           <h2 id="about-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
             About DPGU ACM Student Chapter
@@ -309,180 +498,59 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. TECHNICAL DOMAINS */}
-      <section className="space-y-8" aria-labelledby="domains-heading">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252D3D] pb-5">
-          <div>
-            <Badge variant="accent" size="sm" className="mb-2">
-              Special Interest Groups
-            </Badge>
-            <h2 id="domains-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
-              Technical Domains & Specializations
-            </h2>
-            <p className="text-sm text-[#A5AEC0] mt-1">
-              Explore our student-driven research and engineering working groups.
-            </p>
-          </div>
-          <Link href="/domains">
-            <Button variant="secondary" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              Explore All Domains
-            </Button>
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {domains.map((dom) => (
-            <Card key={dom.id} variant="surface" isInteractive className="flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-mono text-[#648CFF] font-medium">
-                    SIG // {dom.slug.toUpperCase()}
-                  </span>
-                  <Badge variant="neutral" size="sm">
-                    Active
-                  </Badge>
-                </div>
-                <CardTitle className="text-lg mb-2">
-                  <Link href="/domains" className="hover:text-[#648CFF] transition-colors">
-                    {dom.title}
-                  </Link>
-                </CardTitle>
-                <CardDescription className="mb-4">
-                  {dom.shortDescription}
-                </CardDescription>
-
-                <div className="flex flex-wrap gap-1.5">
-                  {dom.technologies.slice(0, 4).map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-[11px] px-2 py-0.5 rounded bg-[#171E2D] border border-[#252D3D] text-[#A5AEC0] font-mono"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-[#252D3D]/60 mt-4 flex items-center justify-between text-xs text-[#A5AEC0]">
-                <span>{dom.meetingSchedule}</span>
-                <span className="text-[#648CFF] font-semibold">Join →</span>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. ACHIEVEMENTS & COMMUNITY HIGHLIGHTS */}
-      <section className="space-y-8" aria-labelledby="achievements-heading">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252D3D] pb-5">
-          <div>
-            <Badge variant="accent" size="sm" className="mb-2">
-              Hall of Fame
-            </Badge>
-            <h2 id="achievements-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
-              Achievements & Competition Honors
-            </h2>
-            <p className="text-sm text-[#A5AEC0] mt-1">
-              Celebrating student excellence across national hackathons and contests.
-            </p>
-          </div>
-          <Link href="/projects">
-            <Button variant="secondary" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              View All Honors
-            </Button>
-          </Link>
+      {/* 5. CHAPTER HIGHLIGHTS & VERIFIED MILESTONES */}
+      <section className="space-y-8" aria-labelledby="highlights-heading">
+        <div className="border-b border-[#252D3D] pb-5">
+          <Badge variant="accent" size="sm" className="mb-2">
+            Chapter Highlights
+          </Badge>
+          <h2 id="highlights-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
+            Impact & Institutional Milestones
+          </h2>
+          <p className="text-sm text-[#A5AEC0] mt-1 max-w-3xl leading-relaxed">
+            Key highlights of our student community, institutional chartering, and collegiate engagement.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {achievements.map((ach) => (
-            <Card key={ach.id} variant="surface">
-              <div className="flex items-center gap-2 mb-3">
-                <Trophy className="w-4 h-4 text-[#F59E0B]" />
-                <Badge variant="warning" size="sm">
-                  {ach.rankBadge}
-                </Badge>
-                <span className="text-xs font-mono text-[#A5AEC0] ml-auto">{ach.year}</span>
-              </div>
-              <CardTitle className="text-base mb-1">{ach.title}</CardTitle>
-              <div className="text-xs text-[#648CFF] font-mono mb-2">{ach.eventName}</div>
-              <CardDescription className="text-xs leading-relaxed mb-4">
-                {ach.description}
-              </CardDescription>
-              <div className="text-[11px] text-[#A5AEC0]/70 font-mono border-t border-[#252D3D]/60 pt-2">
-                Team: {ach.teamMembersPlaceholder}
-              </div>
-            </Card>
-          ))}
+          <Card variant="surface" className="space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#171E2D] border border-[#252D3D] flex items-center justify-center text-[#648CFF]">
+              <Globe2 className="w-5 h-5" />
+            </div>
+            <CardTitle className="text-base">ACM Global Affiliation</CardTitle>
+            <CardDescription className="text-xs leading-relaxed">
+              Official institutional student chapter affiliated with ACM India and ACM International,
+              providing students access to the world-renowned ACM Digital Library, regional symposia,
+              and international student computing competitions.
+            </CardDescription>
+          </Card>
+
+          <Card variant="surface" className="space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#171E2D] border border-[#252D3D] flex items-center justify-center text-[#648CFF]">
+              <Terminal className="w-5 h-5" />
+            </div>
+            <CardTitle className="text-base">Student-Led Engineering</CardTitle>
+            <CardDescription className="text-xs leading-relaxed">
+              Operating entirely under student executive leadership and faculty sponsorship. We cultivate
+              practical mastery in systems software, fullstack web architectures, algorithms, and
+              open-source collaboration.
+            </CardDescription>
+          </Card>
+
+          <Card variant="surface" className="space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#171E2D] border border-[#252D3D] flex items-center justify-center text-[#648CFF]">
+              <Award className="w-5 h-5" />
+            </div>
+            <CardTitle className="text-base">National Competition Engagement</CardTitle>
+            <CardDescription className="text-xs leading-relaxed">
+              Regularly fielding student teams for Smart India Hackathon (SIH), ACM ICPC regional
+              contests, and collegiate hackathons, securing national finalist nominations and podium finishes.
+            </CardDescription>
+          </Card>
         </div>
       </section>
 
-      {/* 6. TEAM PREVIEW */}
-      <section className="space-y-8" aria-labelledby="team-heading">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#252D3D] pb-5">
-          <div>
-            <Badge variant="accent" size="sm" className="mb-2">
-              Chapter Governance
-            </Badge>
-            <h2 id="team-heading" className="text-2xl sm:text-3xl font-bold text-[#F5F7FB]">
-              Faculty Patron & Executive Board
-            </h2>
-            <p className="text-sm text-[#A5AEC0] mt-1">
-              Meet the faculty coordinators and student leads guiding chapter initiatives.
-            </p>
-          </div>
-          <Link href="/team">
-            <Button variant="secondary" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              Full Committee Roster
-            </Button>
-          </Link>
-        </div>
-
-        {/* Faculty Highlight Card */}
-        <Card variant="elevated" className="border-[#252D3D]">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <div className="w-16 h-16 rounded-2xl bg-[#080B12] border border-[#252D3D] flex items-center justify-center text-[#648CFF] shrink-0">
-              <GraduationCap className="w-8 h-8" />
-            </div>
-            <div className="space-y-1.5 flex-1">
-              <div className="flex items-center gap-2">
-                <Badge variant="accent" size="sm">
-                  Faculty Sponsor
-                </Badge>
-                <span className="text-xs font-mono text-[#A5AEC0]">{faculty.tenureYear}</span>
-              </div>
-              <h3 className="text-lg font-bold text-[#F5F7FB]">
-                {faculty.namePlaceholder}
-              </h3>
-              <p className="text-xs text-[#648CFF] font-medium">
-                {faculty.department}
-              </p>
-              <p className="text-xs text-[#A5AEC0] leading-relaxed max-w-2xl pt-1">
-                {faculty.bio}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        {/* Officers Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {officers.map((off) => (
-            <Card key={off.id} variant="surface">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="neutral" size="sm">
-                  {off.roleTitle}
-                </Badge>
-              </div>
-              <CardTitle className="text-base mb-1">{off.namePlaceholder}</CardTitle>
-              <div className="text-xs text-[#648CFF] font-mono mb-2">{off.department}</div>
-              <CardDescription className="text-xs leading-relaxed">
-                {off.bio}
-              </CardDescription>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* 7. CALL TO ACTION */}
+      {/* 6. CALL TO ACTION / JOIN US */}
       <section className="relative overflow-hidden rounded-3xl border border-[#252D3D] bg-gradient-to-b from-[#101522] to-[#080B12] p-8 sm:p-12 text-center space-y-6">
         <div className="max-w-2xl mx-auto space-y-3">
           <Badge variant="accent" size="sm" showDot>
@@ -505,7 +573,7 @@ export default function HomePage() {
           </Link>
           <Link href="/events">
             <Button variant="secondary" size="lg">
-              Browse Upcoming Events
+              Browse Chapter Events
             </Button>
           </Link>
         </div>

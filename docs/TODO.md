@@ -19,98 +19,84 @@ This document tracks all actionable tasks across the lifecycle of the DPGU ACM S
 
 ## 📋 Phase 1: Project Scaffolding, Core Infrastructure, & Design System (Completed)
 
-- [x] **[P0]** Initialize Next.js (App Router) project with TypeScript in `dpgu-acm-website/`.
-- [x] **[P0]** Configure Tailwind CSS with required tokens:
-  - Background: `#080B12`
-  - Surface: `#101522`
-  - Elevated Surface: `#171E2D`
-  - Primary text: `#F5F7FB`
-  - Secondary text: `#A5AEC0`
-  - Primary accent: `#648CFF`
-  - Borders: `#252D3D`
+- [x] **[P0]** Initialize Next.js (App Router) project with TypeScript.
+- [x] **[P0]** Configure Tailwind CSS with required tokens (`#080B12`, `#101522`, `#171E2D`, `#F5F7FB`, `#A5AEC0`, `#648CFF`).
 - [x] **[P0]** Configure Inter font via `next/font/google` and JetBrains Mono for codes/tokens.
 - [x] **[P0]** Implement accessible focus styles (`:focus-visible: 2px solid #648CFF`) and `@media (prefers-reduced-motion: reduce)` rules.
-- [x] **[P0]** Build reusable UI component suite in `src/components/ui/` (`Button`, `Card`, `Input`, `Textarea`, `Select`, `Badge`, `Spinner`, `EmptyState`, `ErrorState`, `Modal`, `Toast`).
+- [x] **[P0]** Build reusable UI component suite in `src/components/ui/` (`Button`, `Card`, `Input`, `Textarea`, `Select`, `Badge`, `Spinner`, `EmptyState`, `ErrorState`, `Modal`, `Toast`, `SocialIcons`).
 - [x] **[P0]** Build responsive glassmorphic sticky Navigation Bar (`src/components/layout/Navbar.tsx`) with mobile drawer.
 - [x] **[P0]** Build responsive Chapter Footer (`src/components/layout/Footer.tsx`).
-- [x] **[P0]** Establish shared public layout (`src/app/(public)/layout.tsx`) and admin shell layout (`src/app/(admin)/layout.tsx`).
+- [x] **[P0]** Establish shared public layout and admin shell layout.
 - [x] **[P0]** Create admin login page (`/admin/login`) with strict single-admin access (no public signup).
-- [x] **[P0]** Establish Supabase client preparation (`src/lib/supabase/client.ts`, `src/lib/supabase/server.ts`, `src/lib/supabase/types.ts`).
-- [x] **[P0]** Implement environment validator with Zod (`src/lib/env.ts`) and create `.env.example`.
-- [x] **[P0]** Implement guest registration validation schema with Zod (`src/schemas/event-registration.ts`).
+- [x] **[P0]** Establish database store and clients with cryptographic session signing.
+- [x] **[P0]** Implement guest registration validation schema with Zod.
 
 ---
 
-## 📋 Phase 2: Complete Public-Facing Website (Completed)
+## 📋 Phase 2: Complete Public-Facing Website Foundation (Completed)
 
-- [x] **[P0]** Implement full Homepage (`/`) with all 9 requested sections:
-  1. Navigation with ACM branding.
-  2. Hero section with headline "Build. Innovate. Compete."
-  3. Upcoming events with spotlight flagship card and preview grid.
-  4. About the chapter with four pillars (Learn, Build, Network, Lead).
-  5. Technical domains preview.
-  6. Achievements & competition honors.
-  7. Faculty sponsor & executive team preview.
-  8. Call to action.
-  9. Footer with campus location, resources, and social channels.
-- [x] **[P0]** Implement About Page (`/about`) with chapter history, ACM mission, constitution, and faculty patron section.
-- [x] **[P0]** Implement Events Hub (`/events`) with real-time text search, category filters (Workshops, Hackathons, Tech Talks, Bootcamps), status filters (Upcoming, Past), and pricing filters (Free, Paid).
-- [x] **[P0]** Implement Event Details Page (`/events/[slug]`) with full schedule agenda, prerequisites, speaker bio, FAQs, capacity specs, and static prerendering via `generateStaticParams`.
-- [x] **[P0]** Implement Technical Domains Page (`/domains`) covering all 6 Special Interest Groups (Web & Cloud, AI/ML, Competitive Programming, Cybersecurity, IoT-Robotics, UI/UX Design).
-- [x] **[P0]** Implement Student Projects & Achievements Directory (`/projects`) with category filters, GitHub repo links, live demo links, and Hall of Fame section.
-- [x] **[P0]** Implement Executive Committee Directory (`/team`) with faculty sponsor card and student officer roster with transparent placeholder notices.
+- [x] **[P0]** Implement full public portal pages (Home, About, Events, Team, Gallery, Contact, Legal).
+- [x] **[P0]** Implement Events Hub (`/events`) with real-time text search and category filters.
+- [x] **[P0]** Implement Event Details Page (`/events/[slug]`) with schedule agenda, prerequisites, speaker bio, and capacity specs.
+- [x] **[P0]** Implement Executive Committee Directory (`/team`) with faculty sponsor card and student officer roster.
 - [x] **[P0]** Implement Event Photographs & Visual Archive (`/gallery`) with album filters and editorial photo cards.
-- [x] **[P0]** Implement Contact & Chapter Membership Page (`/contact`) with validated form, secretariat location, and community channels.
-- [x] **[P0]** Implement Privacy Policy (`/privacy`) aligned with DPDP Act and data minimization.
-- [x] **[P0]** Implement Event Registration Terms & Conduct (`/terms`).
-- [x] **[P0]** Execute Phase 2 verification: ESLint 0 errors, Next.js Turbopack build 22 routes 100% pass, and browser visual/responsive verification.
+- [x] **[P0]** Implement Contact & Chapter Membership Page (`/contact`) with validated form and secretariat location.
+- [x] **[P0]** Implement Privacy Policy (`/privacy`) and Registration Terms (`/terms`).
 
 ---
 
-## 📋 Phase 3: Event Engine & Guest Registration Flow (Upcoming)
+## 📋 Phase 3: Event Engine & Cryptographic Systems (Completed)
 
-- [ ] **[P0]** Build Frictionless Guest Registration Drawer (`src/components/forms/GuestRegistrationDrawer.tsx`).
-- [ ] **[P0]** Implement Public Registration API (`POST /api/register`) with atomic capacity verification and duplicate email prevention.
-- [ ] **[P0]** Build Digital Ticket Pass View (`/tickets/[ticketId]`) with boarding-pass styling.
-- [ ] **[P0]** Implement client-side and server-side QR Code Generator (`src/components/tickets/QRCodeRenderer.tsx`).
-- [ ] **[P1]** Implement Transactional Email Dispatcher with `.ics` calendar file attachment.
-- [ ] **[P0]** Execute Phase 3 acceptance criteria audit (60-second guest registration, instant QR pass, duplicate prevention).
-
----
-
-## 📋 Phase 4: Payment Gateway Integration & Paid Event Flow (Upcoming)
-
-- [ ] **[P0]** Resolve UNRESOLVED-01: Confirm payment gateway provider (Razorpay / Cashfree) and obtain sandbox API credentials.
-- [ ] **[P0]** Implement Payment Client SDK wrapper (`src/lib/payments/`).
-- [ ] **[P0]** Implement Payment Order Creator (`POST /api/payments/create-order`) with 15-minute temporary seat reservation lock.
-- [ ] **[P0]** Integrate Client-Side Checkout Modal (UPI QR, Credit/Debit Cards, NetBanking).
-- [ ] **[P0]** Build Secure Webhook Listener (`POST /api/payments/webhook`) with HMAC-SHA256 signature verification.
-- [ ] **[P0]** Implement webhook idempotency handling to prevent duplicate tickets or double billing.
-- [ ] **[P1]** Handle transaction failures, user drop-offs, and automatic release of expired seat locks.
-- [ ] **[P0]** Execute Phase 4 acceptance criteria audit (valid HMAC check, order reconciliation, digital receipt).
+- [x] **[P0]** Implement PBKDF2 SHA-512 password cryptography and HMAC-SHA256 session token management.
+- [x] **[P0]** Build administrator provisioning with database invariants and audit logging.
+- [x] **[P0]** Build event management engine supporting creation, updating, publishing, and capacity adjustments.
+- [x] **[P0]** Implement attendee check-in gate telemetry with instant duplicate prevention.
+- [x] **[P0]** Run Phase 3 acceptance test suite: 26/26 assertions passed (`scripts/test-phase3.ts`).
 
 ---
 
-## 📋 Phase 5: Admin Dashboard, QR Scanner, & Attendance Management (Upcoming)
+## 📋 Phase 4: Guest Registration Engine & Payment Infrastructure (Completed)
 
-- [ ] **[P0]** Wire Admin Login Page (`/admin/login`) with Supabase Auth credential verification.
-- [ ] **[P0]** Implement Next.js Edge Middleware route guard (`middleware.ts`) to secure all `/admin/*` routes.
-- [ ] **[P0]** Implement Executive Overview Dashboard (`/admin`) with real-time KPI metrics (Attendees, Revenue, Events).
-- [ ] **[P0]** Build Events Manager (`/admin/events`) with Create, Edit, Publish, and Archive actions.
-- [ ] **[P0]** Build Registrations & Payments Ledger (`/admin/registrations`) with search, filter, and 1-click CSV export.
-- [ ] **[P0]** Build In-Browser Live QR Camera Scanner (`/admin/scanner`) using HTML5-QRCode Web API.
-- [ ] **[P0]** Implement Ticket Verification API (`POST /api/tickets/verify`) with instant audio-visual status feedback (Valid / Duplicate / Invalid).
-- [ ] **[P1]** Build Content CMS (`/admin/content`) for Team Roster, Projects Showcase, and Achievements.
-- [ ] **[P0]** Execute Phase 5 acceptance criteria audit (protected routes, sub-500ms QR scan, CSV export).
+- [x] **[P0]** Implement frictionless accountless public registration API (`POST /api/register`).
+- [x] **[P0]** Implement anti-bot honeypot and IP-based sliding-window rate limiting.
+- [x] **[P0]** Implement atomic seat allocation and race condition protection under high concurrency.
+- [x] **[P0]** Implement transactional email dispatchers for registration, payment pending, and cancellation.
+- [x] **[P0]** Run Phase 4 acceptance test suite: 45/45 assertions passed (`scripts/test-phase4.ts`).
 
 ---
 
-## 📋 Phase 6: End-to-End Testing, Security Hardening, & Deployment (Upcoming)
+## 📋 Revision Milestone: Homepage, Navigation, & Events Refactoring (Completed)
 
-- [ ] **[P0]** Conduct complete security audit: CSRF tokens, Content Security Policy (CSP), SQL injection defense, rate limiting.
-- [ ] **[P0]** Execute Hostinger Plan Verification protocol with Chapter IT lead.
-- [ ] **[P0]** Configure production deployment pipeline (Hostinger VPS Docker container OR Vercel + Hostinger LiteSpeed hybrid).
-- [ ] **[P0]** Configure custom domain DNS records and TLS/SSL certificate (HTTPS).
-- [ ] **[P1]** Run end-to-end automated tests for registration, payment webhook, and QR check-in flows.
-- [ ] **[P1]** Produce Admin Operations & Gate Volunteer Training Manual.
-- [ ] **[P0]** Execute Phase 6 acceptance criteria audit (100% test pass rate, live SSL, production handover).
+- [x] **[P0]** Remove standalone Upcoming Events & Workshops widget from Homepage.
+- [x] **[P0]** Implement prominent **Meet Our Team** section on homepage showcasing Faculty Sponsor, Executive Board, and functional leads with verified names, roles, bios, and LinkedIn/GitHub links.
+- [x] **[P0]** Add "View Full Team" link pointing to `/team`.
+- [x] **[P0]** Remove public sections:
+  - Charter & Standards
+  - Technical Domains & Specialization (`/domains`)
+  - Projects & Honors (`/projects`)
+  - Project-achievement cards (`/achievements`)
+- [x] **[P0]** Handle obsolete routes (`/domains`, `/projects`, `/achievements`) with appropriate 404 responses via custom `src/app/not-found.tsx`.
+- [x] **[P0]** Revise public navigation to: Home, About, Events, Team, Gallery, Contact, and "Join Us".
+- [x] **[P0]** Update Chapter Footer to remove obsolete domains and projects links.
+- [x] **[P0]** Reorganize Homepage structure in the strict approved sequence:
+  1. Navigation bar
+  2. Hero section introducing DPGU ACM Student Chapter
+  3. Meet Our Team section
+  4. Events exploration card (directing to upcoming and past events without standalone event cards)
+  5. About DPGU ACM section with the Four Pillars
+  6. Chapter highlights & verified institutional milestones
+  7. Contact or Join Us call to action
+  8. Footer
+- [x] **[P0]** Revise `/events` page with segmented control cleanly separating **Upcoming Events** and **Past Events**.
+- [x] **[P0]** Formulate dynamic event date rules: multi-day events remain upcoming until their end date passes.
+- [x] **[P0]** Separate registration availability from event timing: clearly show open registration, capacity reached, or registration closed.
+- [x] **[P0]** Ensure completed events never display registration actions and provide event detail / recap links.
+- [x] **[P0]** Execute verification: TypeScript compiler 0 errors, ESLint 0 errors, 32/32 Next.js Turbopack pages built successfully.
+
+---
+
+## 📋 Phase 5: Operations Hardening & Hostinger Deployment (Upcoming)
+
+- [ ] **[P0]** Hostinger deployment configuration (Docker / Node.js reverse proxy).
+- [ ] **[P0]** Configure production custom domain and TLS/SSL certificate.
+- [ ] **[P1]** Volunteer check-in gate operator training manual.

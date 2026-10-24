@@ -5,14 +5,22 @@ import { Badge } from "@/components/ui/Badge";
 import { getFacultyCoordinator, getAllOfficers } from "@/data/team";
 import {
   GraduationCap,
-  AlertCircle,
 } from "lucide-react";
+import { LinkedInIcon, GitHubIcon } from "@/components/ui/SocialIcons";
 
 export const metadata: Metadata = {
   title: "Executive Committee & Team",
   description:
     "Meet the faculty coordinator, executive committee officers, and domain leads guiding the DPGU ACM Student Chapter.",
 };
+
+function getInitials(name: string): string {
+  const parts = name.replace(/^Dr\.\s*/i, "").trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
+}
 
 export default function TeamPage() {
   const faculty = getFacultyCoordinator();
@@ -27,7 +35,7 @@ export default function TeamPage() {
         <Badge variant="accent" size="sm" showDot>
           Chapter Governance
         </Badge>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#F5F7FB]">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#F5F7FB]">
           Executive Committee & Leadership
         </h1>
         <p className="text-base sm:text-lg text-[#A5AEC0] leading-relaxed">
@@ -36,22 +44,7 @@ export default function TeamPage() {
         </p>
       </div>
 
-      {/* Official Data Notice Banner */}
-      <div className="p-4 rounded-xl border border-[#252D3D] bg-[#101522] flex items-start gap-3">
-        <AlertCircle className="w-5 h-5 text-[#F59E0B] shrink-0 mt-0.5" />
-        <div className="space-y-1 text-xs">
-          <span className="font-semibold text-[#F5F7FB] block">
-            Official Chapter Roster Notice:
-          </span>
-          <p className="text-[#A5AEC0] leading-relaxed">
-            In compliance with our integrity constraints, officer names are displayed with
-            transparent <code>[Pending Member Verification]</code> tags until the official 2026–2027
-            election results and advisor appointments are verified by the department.
-          </p>
-        </div>
-      </div>
-
-      {/* Faculty Coordinator Showcase */}
+      {/* 1. Faculty Coordinator Showcase */}
       <section className="space-y-6" aria-labelledby="faculty-heading">
         <div className="border-b border-[#252D3D] pb-3">
           <Badge variant="accent" size="sm" className="mb-2">
@@ -67,25 +60,65 @@ export default function TeamPage() {
 
         <Card variant="elevated" className="border-[#252D3D]">
           <div className="flex flex-col md:flex-row items-start gap-6 p-2">
-            <div className="w-20 h-20 rounded-2xl bg-[#080B12] border border-[#252D3D] flex items-center justify-center text-[#648CFF] shrink-0">
-              <GraduationCap className="w-10 h-10" />
+            {/* Avatar / Photo */}
+            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#171E2D] to-[#101522] border-2 border-[#648CFF]/40 flex items-center justify-center text-[#648CFF] font-bold text-2xl font-mono shrink-0 shadow-lg relative overflow-hidden">
+              {faculty.photoUrl ? (
+                <img
+                  src={faculty.photoUrl}
+                  alt={faculty.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center">
+                  <GraduationCap className="w-10 h-10 mb-0.5 text-[#648CFF]" />
+                  <span className="text-[10px] text-[#A5AEC0] font-sans font-normal">Faculty</span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="accent" size="sm">
-                  {faculty.roleTitle}
-                </Badge>
-                <span className="text-xs font-mono text-[#A5AEC0]">{faculty.tenureYear}</span>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="accent" size="sm">
+                    {faculty.roleTitle}
+                  </Badge>
+                  <span className="text-xs font-mono text-[#A5AEC0]">{faculty.tenureYear}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {faculty.linkedinUrl && (
+                    <a
+                      href={faculty.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                      aria-label={`${faculty.name} LinkedIn`}
+                    >
+                      <LinkedInIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {faculty.githubUrl && (
+                    <a
+                      href={faculty.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                      aria-label={`${faculty.name} GitHub`}
+                    >
+                      <GitHubIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
               </div>
 
-              <h3 className="text-xl font-bold text-[#F5F7FB]">
-                {faculty.namePlaceholder}
-              </h3>
-
-              <p className="text-xs text-[#648CFF] font-mono">
-                {faculty.department}
-              </p>
+              <div>
+                <h3 className="text-xl font-bold text-[#F5F7FB]">
+                  {faculty.name}
+                </h3>
+                <p className="text-xs text-[#648CFF] font-mono mt-0.5">
+                  {faculty.department}
+                </p>
+              </div>
 
               <p className="text-xs sm:text-sm text-[#A5AEC0] leading-relaxed">
                 {faculty.bio}
@@ -109,11 +142,11 @@ export default function TeamPage() {
         </Card>
       </section>
 
-      {/* Student Executive Board */}
+      {/* 2. Student Executive Board */}
       <section className="space-y-6" aria-labelledby="exec-heading">
         <div className="border-b border-[#252D3D] pb-3">
           <Badge variant="accent" size="sm" className="mb-2">
-            Student Governance
+            Student Leadership
           </Badge>
           <h2 id="exec-heading" className="text-2xl font-bold text-[#F5F7FB]">
             Student Executive Board (Term 2026–2027)
@@ -127,23 +160,62 @@ export default function TeamPage() {
           {executiveBoard.map((officer) => (
             <Card key={officer.id} variant="surface" className="flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <Badge variant="neutral" size="sm">
-                    {officer.roleTitle}
-                  </Badge>
-                  <span className="text-xs font-mono text-[#A5AEC0]">{officer.tenureYear}</span>
-                </div>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* Avatar */}
+                    <div className="w-12 h-12 rounded-xl bg-[#171E2D] border border-[#252D3D] flex items-center justify-center text-[#648CFF] font-mono font-bold text-sm shrink-0">
+                      {officer.photoUrl ? (
+                        <img
+                          src={officer.photoUrl}
+                          alt={officer.name}
+                          className="w-full h-full object-cover rounded-xl"
+                        />
+                      ) : (
+                        getInitials(officer.name)
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="neutral" size="sm">
+                          {officer.roleTitle}
+                        </Badge>
+                      </div>
+                      <h3 className="text-base font-bold text-[#F5F7FB]">
+                        {officer.name}
+                      </h3>
+                      <div className="text-xs text-[#648CFF] font-mono">
+                        {officer.department}
+                      </div>
+                    </div>
+                  </div>
 
-                <div>
-                  <h3 className="text-base font-bold text-[#F5F7FB]">
-                    {officer.namePlaceholder}
-                  </h3>
-                  <div className="text-xs text-[#648CFF] font-mono mt-0.5">
-                    {officer.department}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {officer.linkedinUrl && (
+                      <a
+                        href={officer.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                        aria-label={`${officer.name} LinkedIn`}
+                      >
+                        <LinkedInIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {officer.githubUrl && (
+                      <a
+                        href={officer.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                        aria-label={`${officer.name} GitHub`}
+                      >
+                        <GitHubIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
                   </div>
                 </div>
 
-                <p className="text-xs text-[#A5AEC0] leading-relaxed">
+                <p className="text-xs text-[#A5AEC0] leading-relaxed pt-1">
                   {officer.bio}
                 </p>
 
@@ -162,26 +234,26 @@ export default function TeamPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-[#252D3D]/60 mt-4 flex items-center justify-between text-xs text-[#A5AEC0]">
-                <span className="font-mono text-[11px]">Officer Profile</span>
-                <span className="text-[#648CFF] font-mono text-[11px]">DPGU ACM</span>
+              <div className="pt-3 border-t border-[#252D3D]/60 mt-3 flex items-center justify-between text-xs text-[#A5AEC0]">
+                <span className="font-mono text-[11px]">Executive Officer</span>
+                <span className="text-[#648CFF] font-mono text-[11px]">{officer.tenureYear}</span>
               </div>
             </Card>
           ))}
         </div>
       </section>
 
-      {/* Domain & Special Interest Group Leads */}
+      {/* 3. Domain & Functional Leads */}
       <section className="space-y-6" aria-labelledby="leads-heading">
         <div className="border-b border-[#252D3D] pb-3">
           <Badge variant="accent" size="sm" className="mb-2">
             Technical Directorate
           </Badge>
           <h2 id="leads-heading" className="text-2xl font-bold text-[#F5F7FB]">
-            Domain Leads & Directors
+            Functional & Technical Leads
           </h2>
           <p className="text-xs text-[#A5AEC0] mt-1">
-            Engineers and designers directing specific functional specializations.
+            Engineers and designers directing specific functional specializations and chapter infrastructure.
           </p>
         </div>
 
@@ -189,16 +261,57 @@ export default function TeamPage() {
           {domainLeads.map((lead) => (
             <Card key={lead.id} variant="surface" className="flex flex-col justify-between">
               <div className="space-y-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  {/* Avatar */}
+                  <div className="w-10 h-10 rounded-xl bg-[#171E2D] border border-[#252D3D] flex items-center justify-center text-[#648CFF] font-mono font-bold text-xs shrink-0">
+                    {lead.photoUrl ? (
+                      <img
+                        src={lead.photoUrl}
+                        alt={lead.name}
+                        className="w-full h-full object-cover rounded-xl"
+                      />
+                    ) : (
+                      getInitials(lead.name)
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    {lead.linkedinUrl && (
+                      <a
+                        href={lead.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded-md text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                        aria-label={`${lead.name} LinkedIn`}
+                      >
+                        <LinkedInIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {lead.githubUrl && (
+                      <a
+                        href={lead.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded-md text-[#A5AEC0] hover:text-[#648CFF] hover:bg-[#171E2D] border border-[#252D3D] transition-colors"
+                        aria-label={`${lead.name} GitHub`}
+                      >
+                        <GitHubIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
                 <Badge variant="neutral" size="sm">
                   {lead.roleTitle}
                 </Badge>
 
-                <h3 className="text-sm font-bold text-[#F5F7FB]">
-                  {lead.namePlaceholder}
-                </h3>
-
-                <div className="text-xs text-[#648CFF] font-mono">
-                  {lead.department}
+                <div>
+                  <h3 className="text-sm font-bold text-[#F5F7FB]">
+                    {lead.name}
+                  </h3>
+                  <div className="text-xs text-[#648CFF] font-mono">
+                    {lead.department}
+                  </div>
                 </div>
 
                 <p className="text-xs text-[#A5AEC0] leading-relaxed">

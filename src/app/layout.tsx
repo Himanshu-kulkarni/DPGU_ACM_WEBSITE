@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { InitialScreenLoader } from "@/components/layout/InitialScreenLoader";
 import "./globals.css";
 
 const inter = Inter({
@@ -52,6 +53,7 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} dark h-full`}
     >
       <body className="min-h-full flex flex-col bg-[#080B12] text-[#F5F7FB] antialiased selection:bg-[#648CFF]/20 selection:text-[#F5F7FB]">
+        <InitialScreenLoader />
         {children}
       </body>
     </html>
